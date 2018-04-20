@@ -1,0 +1,11 @@
+- name: install php-fpm
+  apt: pkg={{ item }} 
+  with_items:
+    - php{{ php_ver }}-cli 
+    - php{{ php_ver }}-common 
+    - php{{ php_ver }}-mysql 
+    - php{{ php_ver }}-gd 
+    - php{{ php_ver }}-fpm 
+    - php{{ php_ver }}-cgi  
+    - php{{ php_ver }}-mcrypt
+    - php-pear

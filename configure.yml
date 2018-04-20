@@ -1,0 +1,13 @@
+---
+- hosts: all
+  vars_files:
+   - config/config.yml
+  tasks:
+  - name: Configure WordPress
+    shell: wp core install 
+             --path={{ wpdirectory }}/wordpress 
+             --url="{{ wordpress_url }}" 
+             --title="{{ wordpress_title }}" 
+             --admin_user="{{ wordpress_user }}" 
+             --admin_password="{{ wordpress_password }}" 
+             --admin_email="{{ wordpress_user_email }}"

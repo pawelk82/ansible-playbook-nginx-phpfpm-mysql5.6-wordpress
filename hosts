@@ -1,0 +1,2 @@
+[webservers]
+debian.example.com ansible_ssh_host=192.168.56.5

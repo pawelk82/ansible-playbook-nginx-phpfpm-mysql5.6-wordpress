@@ -1,0 +1,13 @@
+- hosts: all
+  sudo: yes
+
+  vars_files:
+    - config/config.yml
+
+  roles:
+  - { role: configure }
+  - { role: nginx }
+  - { role: php-fpm }
+  - { role: mysql }
+  - { role: wordpress }
+ 

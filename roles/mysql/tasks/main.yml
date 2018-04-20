@@ -1,0 +1,13 @@
+- name: Install MySQL server
+  apt:
+    pkg: "{{ item }}"
+    update_cache: true
+  with_items:
+    - mysql-server
+    - python-mysqldb
+
+- name: Change MySQL root password
+  mysql_user:
+    name: root
+    password: "{{ mysql_root_password }}"
+  ignore_errors: yes

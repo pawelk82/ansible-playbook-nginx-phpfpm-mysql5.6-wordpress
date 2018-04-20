@@ -1,0 +1,42 @@
+- name: Install Oracle's APT Repo 
+  shell: echo "deb http://repo.mysql.com/apt/debian/ {{ ansible_lsb['codename'] }} mysql-5.6\ndeb-src http://repo.mysql.com/apt/debian/ {{ ansible_lsb['codename'] }} mysql-5.6" > /etc/apt/sources.list.d/mysql.list
+
+- name: Get the MySQL repo public key
+  get_url:
+    url: https://repo.mysql.com/RPM-GPG-KEY-mysql
+    dest: /tmp/RPM-GPG-KEY-mysql
+
+- name: Add MySQL repo key
+  shell: apt-key add /tmp/RPM-GPG-KEY-mysql
+
+- name: Download WP-CLI
+  get_url:
+    url: https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+    dest: /tmp
+
+- name: make WP-CLI phar file executable
+  shell: chmod +x /tmp/wp-cli.phar
+
+- name: Move WP-CLI file
+  shell: mv /tmp/wp-cli.phar /usr/local/bin/wp
+
+- name: Update hostname file
+  lineinfile:
+    path: /etc/hostname
+    regexp: '^.*'
+    line: '{{ inventory_hostname_short }}'
+  notify: 
+  - restart hostname service 
+
+- name: Update hosts file
+  lineinfile:
+    path: /etc/hosts
+    regexp: '^127\.0\.1\.1'
+    line: '127.0.1.1 {{ inventory_hostname }} {{ inventory_hostname_short }}'
+
+- name: Update packages list
+  apt: update_cache=yes
+      
+- name: Update all packages to the latest version
+  apt: 
+    upgrade: dist

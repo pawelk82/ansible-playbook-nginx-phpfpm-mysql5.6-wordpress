@@ -1,0 +1,20 @@
+---
+
+ansible_ssh_user: "user"
+#ansible_ssh_pass: "12345"
+
+php_ver: 7.0
+
+mysql_root_password: "12345678"
+domain: "{{ inventory_hostname }}"
+download_url: "http://wordpress.org/latest.tar.gz"
+wpdirectory: "/var/www"
+db_name: "wordpress"
+db_user: "wordpress"
+db_password: "wordpress"
+
+wordpress_url: "http://{{ inventory_hostname }}"
+wordpress_title: "Test site"
+wordpress_user: "root"
+wordpress_password: "123456789"
+wordpress_user_email: "admin@example.com"

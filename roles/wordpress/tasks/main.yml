@@ -1,0 +1,61 @@
+- name: Creating database for Wordpress
+  mysql_db:
+    name: "{{ db_name }}"
+    state: "present"
+    login_user: "root"
+    login_password: "{{ mysql_root_password }}"
+
+- name: Creating database user
+  mysql_user:
+    name: "{{ db_user }}"
+    password: "{{ db_password }}"
+    priv: "{{ db_name }}.*:ALL"
+    state: "present"
+    login_user: "root"
+    login_password: "{{ mysql_root_password }}"
+
+- name: Copy Nginx configuration
+  template:
+    src: wordpress.conf
+    dest: /etc/nginx/sites-available/wordpress.conf
+  notify: restart nginx
+
+- name: Activate Nginx configuration
+  file:
+    src: '/etc/nginx/sites-available/wordpress.conf'
+    dest: '/etc/nginx/sites-enabled/wordpress.conf'
+    state: 'link'
+
+- name: download WordPress
+  get_url:
+    url: "{{ download_url }}"
+    dest: "/tmp/latest.tar.gz"
+
+- name: creating directory for WordPress
+  file:
+    path: "{{ wpdirectory }}"
+    state: "directory"
+    owner: "www-data"
+    group: "www-data"
+
+- name: unpack WordPress installation
+  shell: "tar xvfz /tmp/latest.tar.gz -C {{ wpdirectory }} && chown -R www-data:www-data {{ wpdirectory }}"
+
+- name: Copy sample config file
+  shell: mv /var/www/wordpress/wp-config-sample.php /var/www/wordpress/wp-config.php
+
+- name: Update WordPress config file
+  lineinfile:
+    dest: /var/www/wordpress/wp-config.php
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  with_items:
+    - {'regexp': "define\\('DB_NAME', '(.)+'\\);", 'line': "define('DB_NAME', '{{ db_name }}');"}
+    - {'regexp': "define\\('DB_USER', '(.)+'\\);", 'line': "define('DB_USER', '{{ db_user }}');"}
+    - {'regexp': "define\\('DB_PASSWORD', '(.)+'\\);", 'line': "define('DB_PASSWORD', '{{ db_password }}');"}
+
+- name: Change permission for all Wordpress directory
+  shell: find /var/www/ -type d -exec chmod 755 {} \;
+
+- name: Change permission for all Wordpress files
+  shell: find /var/www/ -type f -exec chmod 644 {} \;
