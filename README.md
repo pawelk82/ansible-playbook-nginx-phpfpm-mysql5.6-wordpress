@@ -1,7 +1,7 @@
-Ansible Roles: Installs Nginx + PHP-FPM + MySQL5.6 + Wordpress on Debian
+Ansible Roles: Install Nginx + PHP-FPM + MySQL5.6 + Wordpress on Debian
 ==================
 
-This roles installs latest version of Nginx, PHP-FPM(the version of the package can be specified in the variable `php_ver`), MySQL5.6 (Oracle's APT Repo), Wordpress and WP-CLI and configures Wordpress
+This roles install latest version of Nginx, PHP-FPM(the version of the package can be specified in the variable `php_ver`), MySQL5.6 (Oracle's APT Repo), Wordpress and WP-CLI and configures Wordpress
 
 Configure host
 ------------------
